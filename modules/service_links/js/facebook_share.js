@@ -6,5 +6,13 @@ if (Drupal.jsEnabled) {
       $(this).attr('type', Drupal.settings.ws_fs.type);
       $(this).attr('name', 'fb_share');
     });
+
+    if (Drupal.settings.ws_fs.fix_count) {
+      fix_no_count = function() {
+        $(".fb_share_no_count .fb_share_count_inner").text("0");
+        $(".fb_share_no_count").removeClass("fb_share_no_count");
+      }
+      var to = window.setTimeout(fix_no_count, 1500);
+    }
   });
 }
