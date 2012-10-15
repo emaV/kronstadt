@@ -1,0 +1,8 @@
+[26-Dec-2009 11:24:02] PHP Fatal error:  Call to undefined function  art_navigation_links_worker() in /home/bitvarkb/public_html/sites/all/themes/wilderness/block-navigation.tpl.php on line 2
+[01-Mar-2010 10:40:51] PHP Fatal error:  Call to undefined function  art_navigation_links_worker() in /home/bitvarkb/public_html/sites/all/themes/wilderness/block-navigation.tpl.php on line 2
+[01-Mar-2010 11:59:53] PHP Fatal error:  Call to undefined function  art_navigation_links_worker() in /home/bitvarkb/public_html/sites/all/themes/wilderness/block-navigation.tpl.php on line 2
+[11-Apr-2010 23:42:43] PHP Fatal error:  Call to undefined function  art_navigation_links_worker() in /home/bitvarkb/public_html/sites/all/themes/wilderness/block-navigation.tpl.php on line 2
+[11-Apr-2010 23:46:47] PHP Fatal error:  Call to undefined function  art_navigation_links_worker() in /home/bitvarkb/public_html/sites/all/themes/wilderness/block-navigation.tpl.php on line 2
+[28-May-2010 16:57:37] PHP Fatal error:  Call to undefined function  art_navigation_links_worker() in /home/bitvarkb/public_html/sites/all/themes/wilderness/block-navigation.tpl.php on line 2
+[31-May-2010 17:26:26] PHP Fatal error:  Call to undefined function  art_navigation_links_worker() in /home/bitvarkb/public_html/sites/all/themes/wilderness/block-navigation.tpl.php on line 2
+[19-Jul-2010 06:04:25] PHP Fatal error:  Call to undefined function  art_navigation_links_worker() in /home/kronstad/public_html/beta_sites/all/themes/wilderness/block-navigation.tpl.php on line 2

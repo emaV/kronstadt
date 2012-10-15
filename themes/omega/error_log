@@ -1,0 +1,7 @@
+[11-Apr-2010 23:43:03] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/bitvarkb/public_html/sites/all/themes/omega/theme-settings.php on line 7
+[11-Apr-2010 23:43:06] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/bitvarkb/public_html/sites/all/themes/omega/theme-settings.php on line 7
+[26-May-2010 11:27:35] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/bitvarkb/public_html/sites/all/themes/omega/theme-settings.php on line 7
+[26-May-2010 20:08:13] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/bitvarkb/public_html/sites/all/themes/omega/theme-settings.php on line 7
+[30-May-2010 10:26:59] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/bitvarkb/public_html/sites/all/themes/omega/theme-settings.php on line 7
+[31-May-2010 19:37:53] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/bitvarkb/public_html/sites/all/themes/omega/theme-settings.php on line 7
+[19-Jul-2010 05:52:11] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/kronstad/public_html/beta_sites/all/themes/omega/theme-settings.php on line 7

@@ -1,0 +1,71 @@
+html, body, div, span, p, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, form, fieldset, input, textarea {
+  margin: 0px;
+  padding: 0px;
+}
+div.spaced {
+  margin: 1em 0;
+}
+.font-family-sans-serif-sm, .font-family-sans-serif-sm .form-text {
+  font-family: Arial, Helvetica, 'Nimbus Sans L', FreeSans, sans-serif;
+}
+.font-size-12 {
+  font-size: 75%;
+}
+body {
+  font-family: Arial, Helvetica, Verdana, 'Bitstream Vera Sans', sans-serif;
+  font-size: 81.25%;
+  line-height: 150%;
+}
+
+.view {
+  margin: 0px;
+}
+table {
+  border-color: gray;
+  display: table;
+  border-spacing: 0px 0px;
+  border-collapse: collapse;
+}
+thead {
+  border: 1px solid #DBDBDB;
+}
+th, thead th {
+  background: #E8E8E8;
+  border-bottom: 1px solid #CFCFCF;
+  padding: 3px 10px;
+  text-align: left;
+}
+tbody {
+  border: none;
+  border-top: 1px solid #CCC;
+}
+tr.even, tr.odd {
+  background-color: transparent;
+  border-bottom: 1px solid #CCC;
+  padding: 0.1em 0.6em;
+}
+tr.even td, tr.odd td {
+  background-color: transparent;
+  border: 1px solid #DBDBDB;
+}
+td {
+  vertical-align: top;
+  margin: 0px;
+  padding: 3px;
+}
+
+div.content-messages-inner div.warning {
+  background: #FFD;
+  border-color: #EED300;
+  color: #745500;
+}
+div.content-messages div.messages, div.content-help div.help {
+  border-style: solid;
+  border-width: 6px;
+  font-weight: bold;
+  margin-bottom: 1.5em;
+  overflow: hidden;
+  padding: 14px;
+}
+
+

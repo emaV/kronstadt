@@ -1,0 +1,485 @@
+<?php
+// $Id: scribd_field.module,v 1.2.2.1 2008/10/21 15:21:29 melsawy Exp $
+
+/**
+ * @file
+ * Defines a field type for country.
+ */
+
+/**
+ * Implementation of hook_theme().
+ */
+function scribd_field_theme() {
+  return array(
+    'scribd_field_select' => array(
+      'arguments' => array('element' => NULL),
+    ),
+    'scribd_field_formatter_default' => array(
+      'arguments' => array('element'),
+    ),
+    'scribd_field_formatter_name' => array(
+      'arguments' => array('element'),
+    ),
+    'scribd_field_formatter_iso2' => array(
+      'arguments' => array('element'),
+    ),
+    'scribd_field_formatter_iso3' => array(
+      'arguments' => array('element'),
+    ),
+    'scribd_field_formatter_iso_numeric' => array(
+      'arguments' => array('element'),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_field_info().
+ *
+ * Here we indicate that the content module will use its default
+ * handling for the view of this field.
+ *
+ * Callbacks can be omitted if default handing is used.
+ * They're included here just so this module can be used
+ * as an example for custom modules that might do things
+ * differently.
+ */
+function scribd_field_field_info() {
+  return array(
+    'scribd_field' => array(
+      'label' => 'Country field',
+      'description' => t('Store ISO2 text country code in the database.'),
+      'callbacks' => array(
+        'tables' => CONTENT_CALLBACK_DEFAULT,
+        'arguments' => CONTENT_CALLBACK_DEFAULT,
+        ),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_field_settings().
+ */
+function scribd_field_field_settings($op, $field) {
+  switch ($op) {
+    case 'form':
+      $form = array();
+      return $form;
+
+    case 'save':
+      return array();
+
+    case 'database columns':
+      return array(
+        'country' => array(
+          'type'     => 'varchar',
+          'length'   => '2',
+          'not null' => TRUE,
+          'default'  => '',
+        ),
+      );
+  }
+}
+
+/**
+ * Implementation of hook_field().
+ */
+function scribd_field_field($op, &$node, $field, &$items, $teaser, $page) {
+
+  switch ($op) {
+    case 'validate':
+      foreach ($items as $delta => $item) {
+        //die(var_dump($item));
+        if (is_array($item)) {
+          $error_element = isset($item['_error_element']) ? $item['_error_element'] : '';
+          if (is_array($item) && isset($item['_error_element'])) unset($item['_error_element']);
+
+          if (!empty($item['country'])) {
+            $country = countries_api_iso2_get_name($item['country']);
+            if (empty($country)) {
+              form_set_error($error_element, t("%name: the value should be a valid ISO2 code.", array('%name' => t($field['widget']['label']))));
+            }
+          }
+        }
+      }
+      return $items;
+
+    // why both? http://drupal.org/node/286974#comment-959276
+    case 'load':
+    case 'sanitize':
+      foreach ($items as $delta => $item) {
+        if(isset($item['country']) && !isset($item['iso2'])) {
+          $_country = countries_api_iso2_get_country($item['country']);
+          $items[$delta]['safe'] = strip_tags($_country['printable_name']);
+          $items[$delta] = array_merge($items[$delta], $_country);
+        }
+      }
+      break;
+
+  }
+}
+
+/**
+* Implementation of hook_content_is_empty().
+*/
+function scribd_field_content_is_empty($item, $field) {
+  if (empty($item['country'])) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+* Implementation of hook content_generate().
+* 
+* Optional, provide dummy value for nodes created
+* by the Devel Generate module.
+*/
+function scribd_field_content_generate($node, $field) {
+  $node_field = array();
+  $countries = countries_api_get_list();
+  $country = array_slice($countries, rand(0, count($countries)), 1);
+  $node_field['value'] = array_shift($country[0]);
+  return $node_field;
+}
+
+/**
+* Implementation of hook_token_list() 
+* and hook_token_values().
+* 
+* Optional, provide token values for this field.
+*/
+function scribd_field_token_list($type = 'all') {
+  if ($type == 'field' || $type == 'all') {
+    $tokens = array();
+
+    $tokens['scribd_field']['iso2'] = t('ISO2 code');
+    $tokens['scribd_field']['iso3'] = t('ISO3 code');
+    $tokens['scribd_field']['name'] = t('Country name');
+    $tokens['scribd_field']['printable_name'] = t('Country (printable) name');
+    $tokens['scribd_field']['numcode'] = t('Country numeric code');
+
+    return $tokens;
+  }
+}
+
+function scribd_field_token_values($type, $object = NULL) {
+  if ($type == 'field') {
+    $item = $object[0];
+
+    $_country = countries_api_iso2_get_country($item['view']);
+    $tokens['iso2'] = $item['value'];
+    $tokens['iso3'] = is_null($_country) ? '' : $_country['iso3'];
+    $tokens['name'] = is_null($_country) ? '' : $_country['name'];
+    $tokens['printable_name'] = is_null($_country) ? '' : $_country['printable_name'];
+    $tokens['numcode'] = is_null($_country) ? '' : $_country['numcode'];
+    return $tokens;
+  }
+}
+
+/**
+ * Implementation of hook_field_formatter_info().
+ */
+function scribd_field_field_formatter_info() {
+  return array(
+    'default' => array(
+      'label' => 'Country (printable) name',
+      'field types' => array('scribd_field'),
+      'multiple values' => CONTENT_HANDLE_CORE,
+    ),
+    'name' => array(
+      'label' => 'Country name',
+      'field types' => array('scribd_field'),
+      'multiple values' => CONTENT_HANDLE_CORE,
+    ),
+    'iso2' => array(
+      'label' => 'Country ISO2 code',
+      'field types' => array('scribd_field'),
+      'multiple values' => CONTENT_HANDLE_CORE,
+    ),
+    'iso3' => array(
+      'label' => 'Country ISO3 code',
+      'field types' => array('scribd_field'),
+      'multiple values' => CONTENT_HANDLE_CORE,
+    ),
+    'iso_numeric' => array(
+      'label' => 'Country ISO numeric code',
+      'field types' => array('scribd_field'),
+      'multiple values' => CONTENT_HANDLE_CORE,
+    ),
+  );
+}
+
+/**
+ * Theme function for 'default' ('printable_name') scribd_field field formatter.
+ */
+function theme_scribd_field_formatter_default($element) {
+  if (!empty($element['#item']['safe'])) {
+    $output = $element['#item']['safe'];
+  }
+  return $output;
+}
+
+/**
+ * Theme function for 'name' scribd_field field formatter.
+ */
+function theme_scribd_field_formatter_name($element) {
+  if (!empty($element['#item']['name'])) {
+    $output = $element['#item']['name'];
+  }
+  return $output;
+}
+
+/**
+ * Theme function for 'iso2' scribd_field field formatter.
+ */
+function theme_scribd_field_formatter_iso2($element) {
+  if (!empty($element['#item']['iso2'])) {
+    $output = $element['#item']['iso2'];
+  }
+  return $output;
+}
+
+/**
+ * Theme function for 'iso3' scribd_field field formatter.
+ */
+function theme_scribd_field_formatter_iso3($element) {
+  if (!empty($element['#item']['iso3'])) {
+    $output = $element['#item']['iso3'];
+  }
+  return $output;
+}
+
+/**
+ * Theme function for 'iso numeric' scribd_field field formatter.
+ */
+function theme_scribd_field_formatter_iso_numeric($element) {
+  if (!empty($element['#item']['numcode'])) {
+    $output = $element['#item']['numcode'];
+  }
+  return $output;
+}
+
+/**
+ * Implementation of hook_widget_info().
+ *
+ * Here we indicate that the content module will handle
+ * the default value and multiple values for these widgets.
+ *
+ * Callbacks can be omitted if default handing is used.
+ * They're included here just so this module can be used
+ * as an example for custom modules that might do things
+ * differently.
+ */
+function scribd_field_widget_info() {
+  return array(
+    'scribd_field_select' => array(
+      'label' => t('Country Select List'),
+      'field types' => array('scribd_field'),
+      'multiple values' => CONTENT_HANDLE_CORE,
+      'callbacks' => array(
+        'default value' => CONTENT_CALLBACK_DEFAULT,
+      ),
+    ),
+  );
+}
+
+/**
+* Implementation of hook_widget_settings().
+*/
+function scribd_field_widget_settings($op, $widget) {
+  switch ($op) {
+    // Create the form element to be used on the widget 
+    // settings form. Widget settings can be different 
+    // for each shared instance of the same field and 
+    // should define the way the value is displayed to 
+    // the user in the edit form for that content type.
+    case 'form':
+      $form = array();
+      $form['input_type'] = array(
+        '#type' => 'select',
+        '#title' => t('Input type'),
+        '#default_value' => isset($widget['input_type']) ? $widget['input_type'] : 'printable_name',
+        '#options' => array(
+          'printable_name' => 'Printable Name',
+          'name' => 'Name',
+          'iso2' => 'ISO2 code',
+          'iso3' => 'ISO3 code', 
+          'numcode' => 'Numerical code',
+        ),
+        '#description' => t('Select widget input format.'),
+        '#required' => FALSE,
+      );
+      return $form;
+   
+    // Validation hook
+    case 'validate':
+      if(isset($widget['input_type'])) {
+        if(!countries_api_validate_format($widget['input_type'])) {
+          form_set_error('input_type', t('"Input type" not valid.'));
+        }
+      }
+      break;
+
+    // Return an array of the names of the widget settings 
+    // defined by this module. These are the items that 
+    // CCK will store in the widget definition and they 
+    // will be available in the $field['widget'] array.
+    // This should match the items defined in 'form' above.
+    case 'save':
+      return array('input_type');
+  }
+}
+
+/**
+ * Implementation of FAPI hook_elements().
+ *
+ * Any FAPI callbacks needed for individual widgets can be declared here,
+ * and the element will be passed to those callbacks for processing.
+ *
+ * Drupal will automatically theme the element using a theme with
+ * the same name as the hook_elements key.
+ *
+ * Autocomplete_path is not used by text_widget but other widgets can use it
+ * (see nodereference and userreference).
+ */
+function scribd_field_elements() {
+  return array(
+    'scribd_field_select' => array(
+      '#input' => TRUE,
+      '#columns' => array('country'), '#delta' => 0,
+      '#process' => array('scribd_field_select_process'),
+    )
+  );
+}
+
+/**
+ * Implementation of hook_widget().
+ *
+ * Attach a single form element to the form. It will be built out and
+ * validated in the callback(s) listed in hook_elements. We build it
+ * out in the callbacks rather than here in hook_widget so it can be
+ * plugged into any module that can provide it with valid
+ * $field information.
+ *
+ * Content module will set the weight, field name and delta values
+ * for each form element. This is a change from earlier CCK versions
+ * where the widget managed its own multiple values.
+ *
+ * If there are multiple values for this field, the content module will
+ * call this function as many times as needed.
+ *
+ * @param $form
+ *   the entire form array, $form['#node'] holds node information
+ * @param $form_state
+ *   the form_state, $form_state['values'][$field['field_name']]
+ *   holds the field's form values.
+ * @param $field
+ *   the field array
+ * @param $items
+ *   array of default values for this field
+ * @param $delta
+ *   the order of this item in the array of subelements (0, 1, 2, etc)
+ *
+ * @return
+ *   the form item for a single element for this field
+ */
+function scribd_field_widget(&$form, &$form_state, $field, $items, $delta = 0) {
+  switch ($field['widget']['type']) {
+    case 'scribd_field_select':
+      $element = array(
+        '#type' => 'scribd_field_select',
+        '#default_value' => $items,
+      );
+      break;
+  }
+  return $element;
+}
+
+/**
+ * Process an individual element.
+ *
+ * Build the form element. When creating a form using FAPI #process,
+ * note that $element['#value'] is already set.
+ *
+ * The $fields array is in $form['#field_info'][$element['#field_name']].
+ */
+function scribd_field_select_process($element, $edit, $form_state, $form) {
+  // The scribd_field_select widget doesn't need to create its own
+  // element, it can wrap around the optionwidgets_select element.
+  // This will create a new, nested instance of the field.
+  // Add a validation step where the value can be unwrapped.
+  $field_key  = $element['#columns'][0];
+  $element[$field_key] = array(
+    '#type' => 'optionwidgets_select',
+    '#default_value' => isset($element['#value']) ? $element['#value'] : '',
+    // The following values were set by the content module and need
+    // to be passed down to the nested element.
+    '#title' => $element['#title'],
+    '#required' => $element['#required'],
+    '#description' => $element['#description'],
+    '#field_name' => $element['#field_name'],
+    '#type_name' => $element['#type_name'],
+    '#delta' => $element['#delta'],
+    '#columns' => $element['#columns'],
+  );
+  if (empty($element[$field_key]['#element_validate'])) {
+    $element[$field_key]['#element_validate'] = array();
+  }
+  array_unshift($element[$field_key]['#element_validate'], 'scribd_field_optionwidgets_validate');
+  //die(var_dump($element['#value']));
+  return $element;
+}
+
+/**
+ * Validate a select/buttons element.
+ *
+ * Remove the wrapper layer and set the right element's value.
+ * We don't know exactly where this element is, so we drill down
+ * through the element until we get to our key.
+ * 
+ * We use $form_state['values'] instead of $element['#value']
+ * to be sure we have the most accurate value when other modules
+ * like optionwidgets are using #element_validate to alter the value.
+ *   
+ */
+function scribd_field_optionwidgets_validate($element, &$form_state) {
+  $field_key  = $element['#columns'][0];
+  $value = $form_state['values'];
+  $new_parents = array();
+  foreach ($element['#parents'] as $parent) {
+    $value = $value[$parent];
+    // Use === to be sure we get right results if parent is a zero (delta) value.
+    if ($parent === $field_key) {
+      $element['#parents'] = $new_parents;
+      form_set_value($element, $value, $form_state);
+      break;
+    }
+    $new_parents[] = $parent;
+   // die(var_dump($new_parents));
+  }
+}
+
+/**
+ * Implementation of hook_allowed_values().
+ */
+function scribd_field_allowed_values($field) {
+  $first_element = array('' => '-- Please Choose --');
+  $options = countries_api_get_array('iso2', $field['widget']['input_type']);
+  asort($options);
+  return array_merge($first_element, $options);
+}
+
+/**
+ * FAPI theme for an individual elements.
+ *
+ * The textfield or select is already rendered by the
+ * textfield or select themes and the html output
+ * lives in $element['#children']. Override this theme to
+ * make custom changes to the output.
+ *
+ * $element['#field_name'] contains the field name
+ * $element['#delta]  is the position of this element in the group
+ */
+function theme_scribd_field_select($element) {
+  return $element['#children'];
+}

@@ -1,0 +1,58 @@
+<?php
+// $Id: colorbox.install,v 1.3 2010/04/12 07:46:06 frjo Exp $
+
+/**
+ * @file
+ * Installation functions for colorbox.
+ */
+
+/**
+ * Implementation of hook_requirements().
+ */
+// function colorbox_update_requirements($phase) {
+//   $requirements = array();
+//   $t = get_t();
+//
+//   if ($phase == 'runtime') {
+//     $requirements['colorbox'] = array(
+//       'title' => $t('Colorbox'),
+//       'severity' => REQUIREMENT_OK,
+//       'value' => ,
+//     );
+//   }
+//
+//   return $requirements;
+// }
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function colorbox_uninstall() {
+  db_query("DELETE FROM {variable} WHERE name LIKE 'colorbox_%'");
+}
+
+/**
+ * Provides a upgrade path for Thickbox users.
+ * Replaces "thickbox" with "colorbox" in
+ * content_node_field_instance -> display_settings
+ */
+// function colorbox_update_6001() {
+//   $ret = array();
+//
+//   $result = db_query("SELECT *  FROM {content_node_field_instance}");
+//   while ($type = db_fetch_array($result)) {
+//     $new_settings = array();
+//     $display_settings = unserialize($type['display_settings']);
+//     if (!empty($display_settings)) {
+//       foreach ($display_settings as $key => $val) {
+//         $new_settings[$key] = $val;
+//         if ($key == 'format' && is_array($val)) {
+//           $new_settings[$key]['exclude'] = 0;
+//         }
+//       }
+//     }
+//     db_query("UPDATE {content_node_field_instance} SET display_settings='%s' WHERE field_name='%s' AND type_name='%s'", serialize($new_settings), $type['field_name'], $type['type_name']);
+//   }
+//
+//   return $ret;
+// }

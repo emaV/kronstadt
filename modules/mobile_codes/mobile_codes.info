@@ -1,0 +1,11 @@
+name = "Mobile Codes"
+description = "Create <a href="http://en.wikipedia.org/wiki/Datamatrix">Datamatrix</a> or <a href="http://en.wikipedia.org/wiki/QR_Code">QR</a> codes via an input filter or a direct call in your template."
+core = 6.x
+dependencies[] = ctools
+
+; Information added by drupal.org packaging script on 2011-04-19
+version = "6.x-2.0"
+core = "6.x"
+project = "mobile_codes"
+datestamp = "1303193816"
+

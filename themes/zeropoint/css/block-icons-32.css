@@ -1,0 +1,109 @@
+/* ### BLOCKS ### */
+
+#sidebar-left div.block-icon, #sidebar-right div.block-icon {
+	position: absolute;
+	width: 32px;
+	height: 32px;
+	margin: -5px 0 0 -5px;
+}
+#sidebar-left .block .title, #sidebar-right .block .title {
+	text-align: right;
+}
+
+
+/*--- BLOG ---*/
+.block-blog .block-icon {
+	background: transparent url(../images/icons/blocks/icon_01_32.png) no-repeat;
+}
+#block-blog-0 .block-icon {
+	background: transparent url(../images/icons/blocks/icon_02_32.png) no-repeat;
+}
+
+/*--- IMAGE ---*/
+.block-image .block-icon, .block-image_attach .block-icon {
+	background: transparent url(../images/icons/blocks/icon_05_32.png) no-repeat;
+}
+
+/*--- COMMENTS & FORUMS ---*/
+.block-comment .block-icon, .comments-block-icon .block-icon,
+#block-views-comments_recent-block .block-icon {
+	background: transparent url(../images/icons/blocks/icon_01_32.png) no-repeat;
+}
+.block-forum .block-icon,
+#block-views-comments_recent-block h2.block-title {
+	background: transparent url(../images/icons/blocks/icon_06_32.png) no-repeat;
+}
+
+/*--- BOOK ---*/
+.block-book .block-icon {
+	background: transparent url(../images/icons/blocks/icon_22_32.png) no-repeat;
+}
+
+/*--- VIEWS DEFAULT ---*/
+.block-views .block-icon {
+	background: transparent url(../images/icons/blocks/icon_07_32.png) no-repeat;
+}
+
+/*--- USER LOGIN ---*/
+#block-user-0 .block-icon {
+	background: transparent url(../images/icons/blocks/icon_14_32.png) no-repeat;
+}
+div.toboggan-login-link-container {
+  padding-left: 20px;
+}
+
+/*--- USER ---*/
+.block-user .block-icon {
+	background: transparent url(../images/icons/blocks/icon_08_32.png) no-repeat;
+}
+
+/*--- USER new/online ---*/
+#block-user-2 .block-icon, #block-user-3 .block-icon {
+	background: transparent url(../images/icons/blocks/icon_19_32.png) no-repeat;
+}
+
+/*--- SIMPLENEWS / GOOGLE GROUPS ---*/
+.block-simplenews .block-icon, .block-google_groups .block-icon {
+	background: transparent url(../images/icons/blocks/icon_10_32.png) no-repeat;
+}
+
+/*--- DEVEL ---*/
+#block-menu-devel .block-icon {
+	background: transparent url(../images/icons/blocks/icon_12_32.png) no-repeat;
+}
+
+/*--- MENU ---*/
+.block-menu .block-icon {
+	background: transparent url(../images/icons/blocks/icon_13_32.png) no-repeat;
+}
+
+/*--- SEARCH ---*/
+.block-search .block-icon, .block-google_cse .block-icon {
+	background: transparent url(../images/icons/blocks/icon_15_32.png) no-repeat;
+}
+
+/*--- POLL ---*/
+.block-poll .block-icon, .block-i18npoll .block-icon {
+	background: transparent url(../images/icons/blocks/icon_16_32.png) no-repeat;
+}
+
+/*--- MOST printed/emailed ---*/
+.block-print .block-icon, .block-print_mail .block-icon {
+	background: transparent url(../images/icons/blocks/icon_17_32.png) no-repeat;
+}
+
+/*--- POPULAR CONTENT ---*/
+.block-statistics .block-icon {
+	background: transparent url(../images/icons/blocks/icon_18_32.png) no-repeat;
+}
+
+/*--- LOCALE ---*/
+.block-locale .block-icon {
+	background: transparent url(../images/icons/blocks/icon_20_32.png) no-repeat;
+}
+
+/*--- WEATHER ---*/
+.block-weather .block-icon {
+	background: transparent url(../images/icons/blocks/icon_21_32.png) no-repeat;
+}
+

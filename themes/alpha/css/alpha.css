@@ -1,0 +1,515 @@
+/* fonts */
+body{
+	font-family: Verdana, Helvetica, Arial, sans-serif;
+	font-size: 12px;
+}
+
+a, a:visited, a:link {
+  color: #0073ba;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #004975;
+  text-decoration: none;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: Georgia, 'Times New Roman', Serif;
+	color: #0073ba;
+	margin: 20px 0;
+}
+
+.block h2, .block h3 {
+	color: #777676;
+	margin-bottom: 10px;
+}
+
+h2.node-title, h1.title {
+	margin: 0 0 15px 0;
+	line-height: 32px;
+	padding-right: 80px;
+}
+
+h1 { font-size: 30px; }
+h2 { font-size: 30px; }
+h3 { font-size: 26px; }
+h4 { font-size: 22px; }
+h5 { font-size: 18px; }
+h6 { font-size: 16px; }
+
+#branding {
+	height: 40px;
+	line-height: 40px;
+}
+
+#branding h1 {
+  font-size: 30px;
+  padding: 0;
+  margin: 0;
+  line-height: 40px;
+}
+h1 a, h1 a:visited, h1 a:link, 
+h2 a, h2 a:visited, h2 a:link {
+	text-decoration: none;
+}
+
+p, ul, li, dt, dl, td {
+	color: #777676;
+	line-height: 2em;
+}
+
+.submitted, .taxonomy {
+	border-bottom: 1px solid #ccc;
+}
+
+.node{
+	padding: 0;
+	margin: 0 0 20px 0;
+	border: 0;
+}
+
+.node-info, .node-body, .node-wrapper {
+	padding: 0;
+}
+
+.node-info {
+	font-size: 11px;
+}
+
+.node-info .service-links {
+	padding-top: 5px;
+}
+
+/* custom user picture styling */
+.picture {
+	margin-top: 5px;
+}
+
+.breadcrumb {
+	font-size: 11px;
+}
+.node-links {
+	text-align: right;
+}
+
+#site-menu {
+	background:#f8f8f8;
+  border:1px solid #ccc;
+	border-radius: 0.50em;
+  -moz-border-radius: 0.50em;
+  -opera-border-radius: 0.50em;
+  -webkit-border-radius: 0.50em;
+}
+
+#site-menu ul {
+	line-height: 46px;
+	margin: 0 10px 0 0;
+	padding: 0;
+}
+
+#site-menu ul li {
+	padding: 0;
+	margin: 0;
+}
+
+#site-menu ul li a {
+	border: 1px solid transparent;
+  font-size: 14px;
+  padding: 5px 10px;
+  color: #777676;
+  text-decoration: none;
+}
+
+#site-menu ul li a:hover, #site-menu ul li a.active {
+	color: #000;
+	border:1px solid #ccc;
+	background: #EEE;
+	border-radius: 0.25em;
+  -moz-border-radius: 0.25em;
+  -opera-border-radius: 0.25em;
+  -webkit-border-radius: 0.25em;
+}
+
+/* `Grid >> Children (Alpha ~ First, Omega ~ Last)
+ * Don't ask me why, but the alpha & omega classes weren't being assigned properly in 
+ * node.tpl.php, so !important ftw
+----------------------------------------------------------------------------------------------------*/
+
+.alpha {
+  margin-left: 0 !important;
+}
+
+.omega {
+  margin-right: 0 !important;
+}
+
+/**
+ * Pagers =============================================================
+ */
+#main-content div.item-list {
+	padding:0;
+}
+
+#main-content div.item-list ul.pager {
+  position:relative;
+  height:32px;
+  background:#f8f8f8;
+  border:1px solid #ccc;
+  padding-right:80px;
+  margin: 0;
+  border-radius: 0.25em;
+  -moz-border-radius: 0.25em;
+  -opera-border-radius: 0.25em;
+  -webkit-border-radius: 0.25em;
+}
+
+#main-content ul.pager li {
+	margin: 0;
+  padding: 0;
+}
+
+#main-content ul.pager li,
+#main-content ul.pager li a { 
+	float:left;
+}
+
+#main-content ul.pager li.pager-ellipsis,
+#main-content ul.pager li.pager-current,
+#main-content ul.pager li a {
+  color:#666;
+  font-weight:normal;
+  padding:4px 10px;
+  text-decoration: none;
+}
+
+  #main-content ul.pager li { 
+  	border-right:1px solid #ccc;
+  }
+
+  #main-content ul.pager li.pager-current { 
+	  background:#0073ba; 
+	  font-weight: bold; 
+	  color: #FFF;
+  }
+
+  #main-content ul.pager li.pager-first a,
+  #main-content ul.pager li.pager-previous a,
+  #main-content ul.pager li.pager-next a,
+  #main-content ul.pager li.pager-last a {
+    font-size:11px;
+    font-weight:bold;
+    width:79px;
+    padding:4px 0px;
+    text-align:center;
+    background:#dff2fd;
+  }
+
+  #main-content ul.pager li.pager-next,
+  #main-content ul.pager li.pager-last {
+    border-left:1px solid #ccc;
+    border-right:0px;
+    float:right;
+  }
+
+  #main-content ul.pager li a:hover {
+    background:#FFF;
+    color:#000;
+  }
+
+  /* This whole portion is to accommodate the correct order of next/last pager links. */
+  #main-content ul.pager li.last { 
+    position:absolute; 
+    right:0px;
+  }
+  #main-content ul.pager li.pager-current,
+  #main-content ul.pager li.pager-item { 
+    position:static;
+  }
+  
+/**
+ * Tables =============================================================
+ */
+table {
+  width:100%;
+  font-size:11px;
+  margin:0px 0px 10px;
+  background-color:#fcfcfc;
+}
+
+table.system-status-report th,
+table td,
+table th {
+  vertical-align:middle;
+  border:1px solid #ddd;
+  padding:5px;
+}
+
+  table.system-status-report th { padding-left:30px; }
+
+table th {
+  font-size:9px;
+  text-transform:uppercase;
+  background:#eee;
+}
+
+table tr.odd { background:#fff; }
+
+table td.active { background:#e4f0f8; }
+table tr.odd td.active { background:#ecf8fc; }
+
+table tr.selected td.active,
+table tr.selected td {
+  background:#ffc;
+  border-color:#eeb;
+}
+/**
+ * Comments ==============================================================
+ */
+.comment-info {
+	background:#f8f8f8;
+  border:1px solid #ccc;
+	height: 70px;
+	border-radius: 0.50em;
+  -moz-border-radius: 0.50em;
+  -opera-border-radius: 0.50em;
+  -webkit-border-radius: 0.50em;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  position: relative;
+}
+
+.comment-info .picture {
+	float: left;
+	clear: none;
+	margin: 5px 10px 5px 5px;
+}
+
+.comment-info .new {
+	position: absolute;
+	display: block;
+	top: 10px;
+	bottom: 0;
+	right: 10px;
+}
+
+.comment-info h3 {
+	margin: 0;
+	padding: 15px 45px 5px 0;
+	line-height: 18px;
+	font-size: 18px;
+}
+
+.comment-info h3 a {
+	text-decoration: none;
+}
+.comment-info .submitted {
+	color: #777676;
+	font-size: 11px;
+	border-bottom: none;
+	position: absolute;
+	bottom: 0px;
+	right: 5px;
+}
+
+#comments ul.links {
+  position:relative;
+  height:24px;
+  background:#EEE;
+  border:1px solid #ccc;
+  margin: 0 0 10px 0;
+  padding-right: 5px;
+  border-radius: 0.50em;
+  -moz-border-radius: 0.50em;
+  -opera-border-radius: 0.50em;
+  -webkit-border-radius: 0.50em;
+  text-align: right;
+}
+
+#comments ul.links li a {
+	font-size:11px;
+  font-weight:bold;
+  width:79px;
+  padding:4px 0px;
+  text-align:center;
+  line-height: 24px;
+}
+
+#comments ul.links li a:hover {
+  color:#000;
+}
+#comments .content {
+	padding: 0 40px;
+}
+
+/**
+ * Item List fixes, making them less ugly
+ */
+.block div.item-list ul li {
+	line-height: 1.5em;
+	margin-bottom: 1.0em;
+}
+
+.block div.item-list ul li a {
+	
+}
+#postscript-wrapper {
+	padding-bottom: 20px;
+  margin-bottom: 10px;
+  padding-top: 20px;
+  margin-top: 10px;
+}
+
+#footer-message {
+	margin-bottom: 10px;
+}
+#footer-message, #footer-message p {
+	font-style: italic;
+	font-size: 11px;
+	line-height: 1.2em;
+}
+
+
+/** ################# 2.) Content Tabs ####################### */
+
+#content-tabs {
+  padding: 10px;
+  background-color: #f2f2f2;
+  border: 1px solid #ddd;
+  display: block;;
+  margin: 0 0 20px 0;
+  border-radius: 0.50em;
+  -moz-border-radius: 0.50em;
+  -opera-border-radius: 0.50em;
+  -webkit-border-radius: 0.50em;
+  font-family: inherit;
+}
+
+#content-tabs ul.primary,
+#content-tabs ul.secondary {
+  margin: 0;
+  padding: 0 10px 0 0;
+  border: none;
+}
+
+#content-tabs ul.secondary {
+  margin-top: 5px;
+  text-transform: lowercase;
+}
+
+#content-tabs ul.primary li,
+#content-tabs ul.secondary li {
+  background: transparent;
+  border-style: none;
+  display: inline;
+  list-style: none;
+  margin: 0 10px 0 0;
+  padding: 0;
+}
+
+#content-tabs ul.primary li a:link,
+#content-tabs ul.primary li a:visited,
+#content-tabs ul.secondary li a:link,
+#content-tabs ul.secondary li a:visited {
+  background-color: transparent;
+  border: none;
+  color: #000;
+  font-size: 0.9em;
+  line-height: 1.2em;
+  font-weight: normal;
+  margin: 0;
+  padding: 0 0 6px 0;
+  text-decoration: none;
+}
+
+#content-tabs ul.secondary li a:link,
+#content-tabs ul.secondary li a:visited {
+  color: #000;
+  font-size: 0.9em;
+  line-height: 1.1em;
+}
+
+#content-tabs ul.primary li a.active:link,
+#content-tabs ul.primary li a.active:visited {
+  font-size: 1em;
+  border-bottom: 2px solid #000;
+  color: #000;
+  font-weight: bold;
+  padding-bottom: 2px;
+}
+
+#content-tabs ul.secondary li a.active:link,
+#content-tabs ul.secondary li a.active:visited {
+  border-bottom: 2px solid #000;
+  color: #000;
+  font-weight: bold;
+  padding-bottom: 2px;
+}
+
+#content-tabs ul.primary li a:hover,
+#content-tabs ul.secondary li a:hover {
+  border-bottom: 2px solid #999;
+  color: #888;
+  padding-bottom: 2px;
+}
+
+.block-user, #user-login-form {
+	text-align: left;
+}
+.block-user .item-list {
+	margin-top: 10px;
+}
+
+input.form-submit {
+	cursor: pointer;
+  color: #000;
+  border:1px solid #ccc;
+  background: #EEE;
+	padding: 4px 8px;
+  border-radius: 0.25em;
+  -moz-border-radius: 0.25em;
+  -opera-border-radius: 0.25em;
+  -webkit-border-radius: 0.25em;
+}
+input.form-submit:hover {
+	background: #CCC;
+}
+
+
+.title-wrapper {
+	position: relative;
+}
+
+.comment-bubble, .comment-bubble-add {
+	width: 30px;
+	height: 34px;
+	display: block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	text-align: center;
+	background: transparent url('../i/comment_bubble.png') no-repeat top left;
+}
+.comment-bubble-add {
+	top: 0;
+  right: 40px;
+}
+.comment-bubble a, .comment-bubble-add a {
+	display: block;
+	height: 30px;
+	line-height: 30px;
+	font-size: 20px;
+	color: #FFF;
+	text-decoration: none;
+	font-family: Georgia, 'Times New Roman', Serif;
+}
+
+div.messages {
+  border-radius: 0.50em;
+  -moz-border-radius: 0.50em;
+  -opera-border-radius: 0.50em;
+  -webkit-border-radius: 0.50em;
+}
+div.warning, div.status, div.error {
+	padding: 10px;
+}

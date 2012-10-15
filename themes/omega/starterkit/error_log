@@ -1,0 +1,4 @@
+[11-Apr-2010 23:44:26] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/bitvarkb/public_html/sites/all/themes/omega/starterkit/theme-settings.php on line 5
+[11-Apr-2010 23:46:46] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/bitvarkb/public_html/sites/all/themes/omega/starterkit/theme-settings.php on line 5
+[28-May-2010 22:49:34] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/bitvarkb/public_html/sites/all/themes/omega/starterkit/theme-settings.php on line 5
+[19-Jul-2010 09:28:45] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/kronstad/public_html/beta_sites/all/themes/omega/starterkit/theme-settings.php on line 5

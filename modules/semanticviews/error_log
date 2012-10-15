@@ -1,0 +1,14 @@
+[25-May-2010 22:12:18] PHP Warning:  Invalid argument supplied for foreach() in /home/bitvarkb/public_html/sites/all/modules/semanticviews/semanticviews-view-unformatted.tpl.php on line 18
+[28-May-2010 15:29:24] PHP Warning:  Invalid argument supplied for foreach() in /home/bitvarkb/public_html/sites/all/modules/semanticviews/semanticviews-view-unformatted.tpl.php on line 18
+[28-May-2010 16:16:57] PHP Warning:  Invalid argument supplied for foreach() in /home/bitvarkb/public_html/sites/all/modules/semanticviews/semanticviews-view-fields.tpl.php on line 30
+[28-May-2010 17:11:11] PHP Warning:  Invalid argument supplied for foreach() in /home/bitvarkb/public_html/sites/all/modules/semanticviews/semanticviews-view-unformatted.tpl.php on line 18
+[31-May-2010 22:49:03] PHP Warning:  Invalid argument supplied for foreach() in /home/bitvarkb/public_html/sites/all/modules/semanticviews/semanticviews-view-unformatted.tpl.php on line 18
+[01-Jun-2010 08:57:55] PHP Warning:  Invalid argument supplied for foreach() in /home/bitvarkb/public_html/sites/all/modules/semanticviews/semanticviews-view-unformatted.tpl.php on line 18
+[19-Jul-2010 06:08:43] PHP Warning:  Invalid argument supplied for foreach() in /home/kronstad/public_html/beta_sites/all/modules/semanticviews/semanticviews-view-fields.tpl.php on line 30
+[19-Jul-2010 06:13:10] PHP Warning:  Invalid argument supplied for foreach() in /home/kronstad/public_html/beta_sites/all/modules/semanticviews/semanticviews-view-unformatted.tpl.php on line 18
+[21-Jul-2010 19:04:17] PHP Warning:  Invalid argument supplied for foreach() in /home/kronstad/public_html/beta_sites/all/modules/semanticviews/semanticviews-view-fields.tpl.php on line 30
+[22-Jul-2010 01:54:38] PHP Warning:  Invalid argument supplied for foreach() in /home/kronstad/public_html/beta_sites/all/modules/semanticviews/semanticviews-view-unformatted.tpl.php on line 18
+[24-Jul-2010 02:04:27] PHP Warning:  Invalid argument supplied for foreach() in /home/kronstad/public_html/beta_sites/all/modules/semanticviews/semanticviews-view-fields.tpl.php on line 30
+[24-Jul-2010 04:55:02] PHP Warning:  Invalid argument supplied for foreach() in /home/kronstad/public_html/beta_sites/all/modules/semanticviews/semanticviews-view-unformatted.tpl.php on line 18
+[26-Jul-2010 17:37:42] PHP Warning:  Invalid argument supplied for foreach() in /home/kronstad/public_html/beta_sites/all/modules/semanticviews/semanticviews-view-fields.tpl.php on line 30
+[26-Jul-2010 23:43:05] PHP Warning:  Invalid argument supplied for foreach() in /home/kronstad/public_html/beta_sites/all/modules/semanticviews/semanticviews-view-unformatted.tpl.php on line 18

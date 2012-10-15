@@ -1,0 +1,2 @@
+[02-Jun-2010 00:15:50] PHP Fatal error:  Call to undefined function  t() in /home/bitvarkb/public_html/sites/all/themes/genesis/genesis/gpanels/page-gpanel_examples.tpl.php on line 38
+[19-Jul-2010 11:49:17] PHP Fatal error:  Call to undefined function  t() in /home/kronstad/public_html/beta_sites/all/themes/genesis/genesis/gpanels/page-gpanel_examples.tpl.php on line 38

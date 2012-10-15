@@ -1,0 +1,8 @@
+; $Id$
+name = Scribd field 
+description = Defines a scribd field type.
+dependencies[] = filefield
+dependencies[] = content
+dependencies[] = optionwidgets
+package = CCK
+core = 6.x

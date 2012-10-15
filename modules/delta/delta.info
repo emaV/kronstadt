@@ -1,0 +1,15 @@
+; $Id: delta.info,v 1.6 2009/11/19 04:41:46 himerus Exp $
+name = Delta API
+description = The Delta Theme Settings API is an advanced manipulation of the Theme Settings API to allow for customization/configuration of theme settings based on node types, context, or groups of paths.
+package = Theme Tools
+
+; Purposively added for feature development.
+version = 6.x-1.x-dev
+core = 6.x
+project = delta
+; Information added by drupal.org packaging script on 2010-03-28
+version = "6.x-1.x-dev"
+core = "6.x"
+project = "delta"
+datestamp = "1269734748"
+

@@ -1,0 +1,16 @@
+/* $Id: delta.css,v 1.4 2009/11/07 19:48:42 himerus Exp $ */
+#delta-overrides {
+  position: relative;
+}
+
+#delta-overrides .non-clear .form-item {
+  float: left;
+  clear: none;
+}
+#delta-overrides .non-clear a {
+  margin-left: 1em;
+}
+
+#edit-delta-override-theme-wrapper .description {
+	clear: both;
+}

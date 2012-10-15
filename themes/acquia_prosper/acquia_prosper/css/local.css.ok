@@ -1,0 +1,130 @@
+/* $Id: local-sample.css,v 1.1 2009/08/19 04:28:52 sociotech Exp $ */
+
+/****************************/
+/* LOCAL CSS                */
+/****************************/
+
+/* Put your custom CSS and CSS overrides in this file and  */
+/* rename it local.css.  By restricting your CSS changes   */
+/* to local.css, your changes will not be overwritten when */
+/* upgrading to a new version of this theme.  You can also */
+/* use a local-rtl.css file for the equivalent in RTL.     */
+
+/* Steps to activate local.css:                       */
+/* 1. Add your custom CSS to this file                */
+/* 2. Rename this file to local.css                   */
+/* 3. Clear cached data at admin/settings/performance */
+
+.secondary-menu {
+  float: right;
+}
+
+.capo-k {
+  font-family: Arial Black, Arial;
+  letter-spacing: 0.1em;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  line-height: 1em;
+  color: #FFF;
+}
+.capo-k::first-letter,
+.capo-k .first-letter {
+  background: #000;
+  text-transform: lowercase;
+  padding: 0 0.1em;
+  margin: 0 1px;
+}
+
+#site-name a:link, #site-name a:visited {
+  color: #FFF;
+  font-size: 72px;
+}
+
+.view-id-numeri a.capo-k {
+  color: #000;
+}
+
+.header-group-wrapper {
+  background: #555;
+}
+
+/* frasette div */
+.header-group-inner {
+  position: relative;
+}
+
+.header-group-inner #block-views-frasette-block_1 {
+  bottom: 0;
+  padding: 15px 0 5px;
+  position: absolute;
+}
+
+/* scribd widget */
+.block .scribd-docwidget-styled .scribd-docwidget-collection .scribd-docwidget-doc-summary {
+  width:120px;
+}
+.block .scribd-docwidget-styled .scribd-docwidget-collection li {
+  padding: 0.5em 0;
+}
+
+
+/* activity stream */
+.activitystream-icon {
+  float: left;
+}
+.activitystream-item {
+  padding-left: 30px;
+}
+
+/* make list with 2 cols work */
+.fusion-2-col-list.fusion-float-imagefield-left .views-row {
+  clear: right;
+}
+
+/* login form */
+.grid12-6 #user-login-form #edit-name-wrapper,
+.grid12-6 #user-login-form #edit-pass-wrapper {
+  float:left;
+  height:55px;
+  margin:0 0 1em;
+  width:48%;
+}
+
+.grid12-6 #user-login-form .item-list {
+  width: 48%;
+  float: left;
+}
+
+.grid12-6 #user-login-form input {
+  width: 12em;
+}
+
+.grid12-6 #user-login-form #edit-openid-identifier-wrapper input {
+  width: 30.5em;
+}
+
+/* terms in node view */
+.node .terms {
+  padding: 1em 0;
+}
+
+/* other */
+
+td {
+  vertical-align: top;
+}
+
+table.views-view-grid .node,
+div.views-view-grid .node {
+  height: 380px;
+}
+
+table.views-view-grid td {
+  width: 50%;
+}
+
+
+
+
+

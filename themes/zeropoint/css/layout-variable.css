@@ -1,0 +1,66 @@
+/* layout.css, v2.3 2009/2/15 
+ *
+ * ZERO POINT theme, for Drupal 6
+ * Dr. Florian Radut, florian[at]radut.net
+ */
+
+/* MAIN PAGE STRUCTURE */
+/* ... see layout.css
+To modify the side column widths and the col divider widths, the values that are marked 
+"Critical Left (Right) divider dimension value = cLddv (cRddv)" and 
+"Critical Left (Right) col width value = cLcwv (cRcwv) also refer to the desired mod MUST be changed as a group. */
+
+body.layout-left-main-right .outer {
+	margin-left: 204px;			/*** cLcwv ***/
+	margin-right: 278px;			/*** cLcwv ***/
+}
+body.layout-left-main .outer {
+	margin-left: 294px;			/*** cLcwv ***/
+}
+body.layout-main-right .outer {
+	margin-right: 344px;			/*** cLcwv ***/
+}
+.float-wrap {
+	float: left;
+	width: 100%;
+}
+.colmain {
+	float: right;
+	width: 100%;
+}
+.colleft {
+	float: left;
+	position: relative;
+	width: 204px;			/*** cLcwv ***/
+	margin-left: -204px;		/*** cLcwv ***/ /*** cLddv ***/
+}
+.colright {
+	float: right;
+	position: relative;
+	width: 278px;		/*** cRcwv ***/
+	margin-right: -278px;		/*** cRcwv ***/ /*** cRddv ***/
+}
+body.layout-left-main .colleft {
+	width: 294px;			/*** cLcwv ***/
+	margin-left: -294px;		/*** cLcwv ***/ /*** cLddv ***/
+}
+body.layout-main-right .colright {
+	width: 344px;		/*** cRcwv ***/
+	margin-right: -344px;		/*** cRcwv ***/ /*** cRddv ***/
+}
+#sidebar-left, #sidebar-right {
+	position: relative;
+	margin: 0;
+}
+#sidebar-left {
+	width: 184px;
+}
+#sidebar-right {
+	width: 258px;
+}
+body.layout-left-main #sidebar-left {
+	width: 274px;
+}
+body.layout-main-right #sidebar-right {
+	width: 324px;
+}

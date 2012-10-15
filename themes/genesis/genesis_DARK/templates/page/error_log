@@ -1,0 +1,3 @@
+[11-Apr-2010 23:47:17] PHP Fatal error:  Call to undefined function  t() in /home/bitvarkb/public_html/sites/all/themes/genesis/genesis_DARK/templates/page/page.tpl.php on line 105
+[02-Jun-2010 00:29:46] PHP Fatal error:  Call to undefined function  t() in /home/bitvarkb/public_html/sites/all/themes/genesis/genesis_DARK/templates/page/page.tpl.php on line 105
+[20-Jul-2010 18:11:07] PHP Fatal error:  Call to undefined function  t() in /home/kronstad/public_html/beta_sites/all/themes/genesis/genesis_DARK/templates/page/page.tpl.php on line 105

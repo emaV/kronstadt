@@ -1,0 +1,41 @@
+<?php
+// $Id$
+// Notify CCK when this module is enabled, disabled, installed, 
+// and uninstalled so CCK can do any necessary preparation or cleanup.
+/**
+* @file
+* Implementation of hook_install().
+*/
+function scribd_field_install() {
+  drupal_load('module', 'content');
+  content_notify('install', 'scribd_field');
+}
+
+/**
+* Implementation of hook_uninstall().
+*/
+function scribd_field_uninstall() {
+  drupal_load('module', 'content');
+  content_notify('uninstall', 'scribd_field');
+}
+
+/**
+* Implementation of hook_enable().
+*
+* Notify content module when this module is enabled.
+*/
+function scribd_field_enable() {
+  drupal_load('module', 'content');
+  content_notify('enable', 'scribd_field');
+}
+
+/**
+* Implementation of hook_disable().
+*
+* Notify content module when this module is disabled.
+*/
+function scribd_field_disable() {
+  drupal_load('module', 'content');
+  content_notify('disable', 'scribd_field');
+}
+?>

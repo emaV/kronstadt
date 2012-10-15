@@ -1,0 +1,46 @@
+Mobile Codes 6.x-2.0, 2011-04-19
+--------------------------------------------------------------------------------
+
+- #1124644: Fixed deprecated pass-by-reference issues.
+- #1115308: Re-implemented hook_uninstall().
+- Added Custom Formatter example.
+- Added Rubik and Cube admin icon.
+- Fixed issue with Presets Add UI AHAH.
+- Fixed issue with Generator block AHAH.
+- Improved Features support.
+- Improved documentation.
+
+
+Mobile Codes 6.x-2.0-beta1, 2011-04-03
+--------------------------------------------------------------------------------
+
+- #1109968: Fixed data encoding issue.
+- #923074: Added hook_perm() implementation.
+- #774854: Added support for PHP QR Code library.
+- #710840: Added Node URL block.
+- Added user-definable Mobile Code providers.
+- Added CTools Exportables support.
+- Added Link and FileField module field formatters.
+- Added user vCard block support.
+- Added data type detection and settings.
+- Added link tracking option via Redirecting Click Bouncer module.
+- Added Admin module optimized Mobile Codes generator block.
+
+
+Mobile Codes 6.x-1.1, 2010-02-02
+--------------------------------------------------------------------------------
+
+- #409958: Added File path output to CCK/Views formatter.
+- #383296: Added theme() function to generate mobile codes.
+- #376518: Added class 'mobile_code' to generated mobile codes.
+- #268893: Fixed name value not being displayed.
+- Added Mobile Codes Administration/Presets.
+- Added CCK/Views formatter.
+- Added Mobile Codes local caching.
+- Fixed undefined variables/indexes.
+
+
+Mobile Codes 6.x-1.0, 2008-05-11
+--------------------------------------------------------------------------------
+
+- Initial 6.x release.

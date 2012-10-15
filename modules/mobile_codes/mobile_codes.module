@@ -1,0 +1,328 @@
+<?php
+/**
+ * @file
+ * Mobile Codes core functions.
+ */
+
+/**
+ * Include additional files.
+ */
+foreach (module_list() as $module) {
+  if (file_exists($file = dirname(__FILE__) . "/includes/{$module}.inc")) {
+    require_once $file;
+  }
+}
+
+/**
+ * Implements hook_init().
+ */
+function mobile_codes_init() {
+  // Determine if CTools is available after Mobile Codes 1.x to 2.x upgrade.
+  if (!module_exists('ctools')) {
+    module_enable(array('ctools'));
+    if (!module_exists('ctools')) {
+      drupal_set_message(t('Mobile Codes has been disabled as the required !ctools module is not present.', array('!ctools' => l(t('Chaos tool suite'), 'http://drupal.org/project/ctools'))), 'error');
+      module_disable(array('mobile_codes'));
+    }
+  }
+}
+
+/**
+ * Implements hook_perm().
+ */
+function mobile_codes_perm() {
+  return array('administer mobile codes');
+}
+
+/**
+ * Implements hook_flush_caches().
+ */
+function mobile_codes_flush_caches() {
+  _mobile_codes_recursive_delete(file_directory_path() . '/mobile_codes');
+  return array();
+}
+
+/**
+ * Recursively delete files and folders.
+ *
+ * @param $directory
+ *   The directory to recurse through.
+ */
+function _mobile_codes_recursive_delete($directory) {
+  if (is_dir($directory)) {
+    foreach (array_diff(scandir($directory), array('.', '..')) as $file) {
+      $file = "{$directory}/{$file}";
+      if (is_dir($file)) {
+        _mobile_codes_recursive_delete($file);
+        @rmdir($file);
+      }
+      else {
+        @unlink($file);
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_mobile_codes_menu_alter().
+ */
+function mobile_codes_mobile_codes_menu_alter($items) {
+  $items['admin/settings/mobile_codes/settings'] = array(
+    'title' => 'Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mobile_codes_settings_form'),
+    'access arguments' => array('administer mobile codes'),
+    'file' => 'includes/mobile_codes.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 10,
+  );
+
+  $items['ahah/mobile_codes'] = array(
+    'title' => 'Mobile Codes AHAH callback',
+    'page callback' => 'mobile_codes_ahah',
+    'page arguments' => array(2, 3),
+    'access arguments' => array('administer mobile codes providers'),
+    'type' => MENU_CALLBACK,
+  );
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function mobile_codes_menu_alter(&$items) {
+  // @TODO - Make this better.
+  if (isset($items['admin/settings/mobile_codes/presets'])) {
+    $items['admin/settings/mobile_codes'] = array_merge(
+      $items['admin/settings/mobile_codes/presets'],
+      array(
+        'title' => 'Mobile Codes',
+        'type' => MENU_NORMAL_ITEM,
+      )
+    );
+    $items['admin/settings/mobile_codes/presets']['type'] = MENU_DEFAULT_LOCAL_TASK;
+    $items['admin/settings/mobile_codes/presets']['parent'] = 'admin/settings/mobile_codes';
+    $items['admin/settings/mobile_codes/providers']['type'] = MENU_LOCAL_TASK;
+    $items['admin/settings/mobile_codes/providers']['parent'] = 'admin/settings/mobile_codes';
+  }
+}
+
+/**
+ * Implements hook_mobile_codes_theme_alter().
+ */
+function mobile_codes_mobile_codes_theme_alter($items) {
+  $items['mobilecode'] = array(
+    'arguments' => array(
+      'data' => NULL,
+      'attributes' => array(),
+      'image_alt' => '',
+      'image_title' => '',
+      'image_attributes' => NULL,
+      'image_getsize' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Cache a Mobile Code.
+ *
+ * @param $url
+ *   A processed Mobile Code URL.
+ *
+ * @return
+ *   The path of the cached Mobile Code if request is successful, and FALSE if
+ *   it isn't.
+ */
+function mobile_codes_generate($url) {
+  if (!file_exists($file = file_directory_path() . '/mobile_codes/' . md5(serialize($url)) . '.png')) {
+    $request = drupal_http_request($url);
+    if ($request->code == 200) {
+      if (file_check_directory($dir = file_directory_path() . '/mobile_codes', FILE_CREATE_DIRECTORY)) {
+        file_save_data($request->data, $file);
+      }
+    }
+
+    else {
+      return FALSE;
+    }
+  }
+  return $file;
+}
+
+/**
+ * Determine the Data type of the provided data.
+ *
+ * @param $data
+ *   The data as provided for use in a Mobile Code.
+ *
+ * @return
+ *   The determined Data type.
+ */
+function mobile_code_data_type($data) {
+  switch ($data) {
+    case valid_url($data, TRUE):
+      return 'url';
+
+    default:
+      return 'text';
+  }
+}
+
+/**
+ * Process Mobile Codes request URL.
+ *
+ * @param $data
+ *   The data as provided for use in a Mobile Code.
+ * @param $attributes
+ *   An associative array of attributes necessary to create a Mobile Code.
+ *   - #preset: A string containing the name of a Mobile Code Preset.
+ *
+ * @return
+ *   The processed Mobile Codes request URL if all required attributes are
+ *   provided, or FALSE if they aren't.
+ */
+function mobile_codes_process_url($data, $attributes) {
+  if (isset($attributes['#preset']) || isset($attributes['#provider'])) {
+    ctools_include('export');
+    if (isset($attributes['#preset'])) {
+      $preset = clone(ctools_export_crud_load('mobile_codes_presets', $attributes['#preset']));
+      $attributes['#provider'] = $preset->provider;
+      $attributes = array_merge($attributes, $preset->defaults);
+    }
+
+    $provider = clone(ctools_export_crud_load('mobile_codes_providers', $attributes['#provider']));
+    foreach (element_children($provider->parameters) as $parameter) {
+      if (!isset($attributes[$parameter])) {
+        switch ($provider->parameters[$parameter]['type']) {
+          case 'data':
+            mobile_codes_process_data($data);
+            $attributes[$parameter] = urlencode($data);
+            break;
+
+          case 'select':
+            $provider->parameters[$parameter]['value'] = explode("\n", $provider->parameters[$parameter]['value']);
+            $provider->parameters[$parameter]['value'][0] = explode("|", $provider->parameters[$parameter]['value'][0]);
+            $attributes[$parameter] = $provider->parameters[$parameter]['value'][0][0];
+            break;
+
+          case 'text':
+            drupal_set_message(t('Mobile Codes argument %arg missing.', array('%arg' => $parameter)), 'error');
+            return '';
+        }
+      }
+      $provider->url = str_replace("[{$parameter}]", $attributes[$parameter], $provider->url);
+    }
+    return $provider->url;
+  }
+  return FALSE;
+}
+
+/**
+ * Process the data provided to a Mobile Code.
+ *
+ * @param $data
+ *   The data provided to a Mobile Code.
+ */
+function mobile_codes_process_data(&$data) {
+  $settings = array();
+  $type = mobile_code_data_type($data);
+  $defaults = variable_get('mobile_codes_settings', array(
+    'url' => array(
+      'alias' => 'alias',
+    ),
+  ));
+
+  drupal_alter('mobile_codes_settings', $settings);
+  if (is_array($settings[$type]) && count($settings[$type]) > 0) {
+    foreach ($settings[$type = mobile_code_data_type($data)] as $setting => $values) {
+      if ($defaults['url'][$setting]) {
+        $weight = isset($values['weight']) ? $values['weight'] : 0;
+        $order[$weight] = is_array($order[$weight]) ? $order[$weight] : array();
+        $order[$weight][] = $setting;
+      }
+    }
+
+    ksort($order);
+    foreach ($order as $settings) {
+      sort($settings);
+      foreach ($settings as $setting) {
+        if (function_exists($function = "mobile_codes_data_{$type}_{$setting}")) {
+          $function($data);
+        }
+      }
+    }
+  }
+}
+
+
+/**
+ * AHAH callback.
+ *
+ * @param $section
+ *   The form section invoking the AHAH callback.
+ * @param $op
+ *   The specific form operation requiring the AHAH callback.
+ */
+function mobile_codes_ahah($section, $op = NULL) {
+  // Immediately disable devel shutdown functions so that it doesn't botch our
+  // JSON output.
+  $GLOBALS['devel_shutdown'] = FALSE;
+
+  if (empty($_POST['form_build_id'])) {
+    // Invalid request.
+    drupal_set_message(t('An unrecoverable error occurred.'));
+    print drupal_to_js(array('data' => theme('status_messages')));
+    exit;
+  }
+
+  // Load the form.
+  $form_state = array(
+    'rebuild' => TRUE,
+    'storage' => NULL,
+    'submitted' => FALSE
+  );
+  $form_build_id = $_POST['form_build_id'];
+  $form = form_get_cache($form_build_id, $form_state);
+  $args = $form['#parameters'];
+  $form_id = array_shift($args);
+  $form_state['post'] = $form['#post'] = $_POST;
+  $form['#programmed'] = $form['#redirect'] = FALSE;
+  form_set_error(NULL, '', TRUE);
+
+  // Process the form with drupal_process_form(), which calls the submit
+  // handlers that puts whatever was worthy of keeping in the $form_state.
+  drupal_process_form($form_id, $form, $form_state);
+
+  // Session messages would get displayed at the next regular request, but
+  // we're in AHAH here, so that won't happen. Make them go away.
+  unset($_SESSION['messages']);
+  form_set_error(NULL, '', TRUE);
+
+  if (function_exists($function = "mobile_codes_ahah_{$section}_{$op}") || function_exists($function = "mobile_codes_ahah_{$section}")) {
+    $output = $function($form_id, $form, $form_state, $args, $form_build_id);
+  }
+
+  print drupal_to_js(array('status' => TRUE, 'data' => $output));
+}
+
+/**
+ * Theme function for displaying Mobile Codes
+ */
+function theme_mobilecode($data, $attributes, $image_alt = '', $image_title = '', $image_attributes = NULL, $image_getsize = TRUE) {
+  if ($url = mobile_codes_process_url($data, $attributes)) {
+    if ($path = mobile_codes_generate($url)) {
+      return theme('image', $path, $image_alt, $image_title, $image_attributes, $image_getsize);
+    }
+  }
+  // @TODO - Set error.
+  return 'Error';
+}
+
+/**
+ * Invokes hook_preprocess_page().
+ */
+function mobile_codes_preprocess_page(&$vars) {
+  global $theme;
+  if (file_exists($file = drupal_get_path('module', 'mobile_codes') . "/styles/{$theme}.css")) {
+    drupal_add_css($file);
+  }
+}

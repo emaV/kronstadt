@@ -1,0 +1,17 @@
+; $Id: node_type.info,v 1.1 2009/11/10 14:17:55 himerus Exp $
+name = Delta API - Node Type Conditionals
+description = Offers the ability to create conditional overrides based on node type.
+package = Theme Tools
+dependencies[] = delta
+
+
+; Purposively added for feature development.
+version = 6.x-1.x-dev
+core = 6.x
+project = delta
+; Information added by drupal.org packaging script on 2010-03-28
+version = "6.x-1.x-dev"
+core = "6.x"
+project = "delta"
+datestamp = "1269734748"
+

@@ -1,0 +1,7 @@
+[11-Apr-2010 23:43:02] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/bitvarkb/public_html/sites/all/themes/alpha/theme-settings.php on line 5
+[11-Apr-2010 23:50:58] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/bitvarkb/public_html/sites/all/themes/alpha/theme-settings.php on line 5
+[26-May-2010 02:41:26] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/bitvarkb/public_html/sites/all/themes/alpha/theme-settings.php on line 5
+[26-May-2010 17:10:16] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/bitvarkb/public_html/sites/all/themes/alpha/theme-settings.php on line 5
+[30-May-2010 10:15:07] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/bitvarkb/public_html/sites/all/themes/alpha/theme-settings.php on line 5
+[02-Jun-2010 18:52:26] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/bitvarkb/public_html/sites/all/themes/alpha/theme-settings.php on line 5
+[19-Jul-2010 05:52:06] PHP Fatal error:  Call to undefined function  drupal_get_path() in /home/kronstad/public_html/beta_sites/all/themes/alpha/theme-settings.php on line 5
