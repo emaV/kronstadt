@@ -55,7 +55,16 @@ function _epsacrop_include_html() {
     drupal_add_js($path_module .'/js/epsacrop.js');
     
     // We try to use the theme from jquery_ui module
-    drupal_add_css(drupal_get_path('module', 'jquery_ui') .'/jquery.ui/themes/default/ui.all.css');
+    if (function_exists('jquery_ui_get_path')) {
+      $css_path = jquery_ui_get_path() . '/themes/base/ui.all.css';
+      if (!file_exists($css_path)) {
+        $css_path = jquery_ui_get_path() . '/themes/default/ui.all.css';
+      }
+      drupal_add_css($css_path);
+    }
+    else{
+      drupal_add_css(drupal_get_path('module', 'jquery_ui') .'/jquery.ui/themes/default/ui.all.css');
+    }
     drupal_add_css(EPSACROP_JCROP_PATH .'/css/jquery.Jcrop.css');
     drupal_add_css($path_module .'/css/epsacrop.css');
     $included = TRUE;
@@ -157,7 +166,16 @@ function epsacrop_nodeapi(&$node, $op, $a3, $a4) {
     case'update':
       if (!empty($node->epsacropcoords)) {
         $coords = json_decode($node->epsacropcoords, TRUE);
+        $previous_data = FALSE;
+        if ($node->nid) {
+          // If node exists (op=update) get previous cropping data.
+          $previous_data = _epsacrop_get_coords_from_nid($node->nid);
+        }
         foreach ($coords as $fid => $coord) {
+          // Skip file update for the files that the cropping area haven't changed for any of the presets.
+          if (!empty($previous_data) && strcmp(serialize($coord), serialize($previous_data[$fid])) == 0) {
+            continue;
+          }
           _epsacrop_update_file($fid, $coord, $node->nid);
         }
       }
@@ -198,6 +216,7 @@ function epsacrop_form_alter(&$form, $form_state, $form_id) {
       '#default_value' => (!empty($node->epsacropcoords) ? $node->epsacropcoords : ''),
       '#prefix' => '<div id="edit-epsacropcoords-wrapper">',
       '#suffix' => '</div>',
+      '#wysiwyg' => FALSE // To avoid wysiwyg from ckeditor and other who uses it.
     );
   }
 }
@@ -521,8 +540,7 @@ if (!$preset = imagecache_preset_by_name($presetname)) {
     }
     $preset['actions'] = array_merge(array($epsacrop_crop, $epsacrop_resize), $saved_actions);
   }
-  
-  
+
   // check if deriv exists... (file was created between apaches request handler and reaching this code)
   // otherwise try to create the derivative.
   if (file_exists($dst) || imagecache_build_derivative($preset['actions'], $src, $dst)) {

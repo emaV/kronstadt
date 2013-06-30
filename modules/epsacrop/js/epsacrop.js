@@ -9,10 +9,15 @@ Drupal.EPSACrop = {
 
     // Translatables buttons
     var buttons = {}
-    var saveLabel = Drupal.t("Save");
+    var saveLabel = Drupal.t("Apply crop");
     var cancelLabel = Drupal.t("Cancel");
     buttons[saveLabel] = function(){
       $('#edit-epsacropcoords').val(JSON.stringify(Drupal.EPSACrop.presets));
+      var field = field_name.replace('_', '-');
+      var welem = $('div[id*="' + field +  '"]').eq(0);
+      if(welem.find('.warning').size() == 0) {
+        welem.prepend('<div class="warning">' + Drupal.t("Changes made in image crops will not be saved until the form is submitted.") + '</div>');
+      }
       $(this).dialog('close');
       $('#EPSACropDialog').remove();
     };
@@ -55,13 +60,14 @@ Drupal.EPSACrop = {
               aspectRatio: (coords[0] / coords[1]),
               //setSelect: (typeof c == 'object') ? [c.x, c.y, c.x2, c.y2] : [0, 0, coords[0], coords[1]],
               trueSize: trueSize,
-              onSelect: Drupal.EPSACrop.update
+              onSelect: Drupal.EPSACrop.update,
+              keySupport: false
            }); // $.Jcrop
            // animateTo, to avoid one bug from Jcrop I guess,
            // He doesn't calculate the scale with setSelect at the begining, so
            // I add animateTo after initate the API.
            Drupal.EPSACrop.api.animateTo(((typeof c == 'object') ? [c.x, c.y, c.x2, c.y2] : [0, 0, coords[0], coords[1]]));
-          }, 1000); // Sleep < d'une second
+          }, 1000); // Sleep 1 second
        }catch(err) {
     	   alert(Drupal.t("Error on load : @error", {'@error': err.message}));
        }
