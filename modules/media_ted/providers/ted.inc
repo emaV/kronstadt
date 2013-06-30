@@ -13,8 +13,9 @@ define('EMVIDEO_TED_PLAYER_URL', 'http://video.ted.com/assets/player/swf/EmbedPl
 define('EMVIDEO_TED_ID_EMBED_URL', 'http://www.ted.com/talks/embed/id/');
 define('EMVIDEO_TED_ID_VIEW_URL', 'http://ted.com/talks/view/id/');
 define('EMVIDEO_TED_VIDEO_BASE', 'http://video.ted.com/');
+define('EMVIDEO_TED_EMBED_BASE', 'http://embed.ted.com/');
 
-define('EMVIDEO_TED_DATA_VERSION', 3);
+define('EMVIDEO_TED_DATA_VERSION', 4);
 
 /**
  * FIXME avoid using the global variable
@@ -87,9 +88,10 @@ function emvideo_ted_settings() {
  *   otherwise, the calling function will handle testing the embed code against each regex string in the returned array.
  */
 function emvideo_ted_extract($embed = '') {
+  // Generate talk URL
 
-  // [ted id=319] --> http://www.ted.com/talks/embed/id/319
-  if ($embed && preg_match('@\[ted id=([0-9]+)\]@i', $embed, $matches)) {
+  // [ted id=319 .*] --> http://www.ted.com/talks/embed/id/319
+  if ($embed && preg_match('@\[ted id=([0-9]+).*\]@i', $embed, $matches)) {
     $result = drupal_http_request(EMVIDEO_TED_ID_EMBED_URL . $matches[1]);
     if ($result->code == 200) {
       $embed = $result->data;
@@ -109,11 +111,21 @@ function emvideo_ted_extract($embed = '') {
     }
   }
 
-  if ($embed && preg_match('@video\.ted\.com\/(talk.*?[^&])\&([^\"\']+)@i', $embed, $matches)) {
-    global $_media_ted_extra;
-    $_media_ted_extra = $matches[2];
+  // parse embed code
+  if ($embed) {
+    // old flash version
+    if (preg_match('@video\.ted\.com\/(talk.*?[^&])\&([^\"\']+)@i', $embed, $matches)) {
+      global $_media_ted_extra;
+      // thumbnail url
+      $_media_ted_extra = $matches[2];
 
-    return $matches[1];
+      // embed code
+      return $matches[1];
+    }
+    // iframe version
+    else if (preg_match('@embed\.ted\.com\/(talks/[^\'"]*)@', $embed, $matches)) {
+      return $matches[1];
+    }
   }
 
   return FALSE;
@@ -129,32 +141,13 @@ function emvideo_ted_data($field, $item) {
   $data = array();
   $data['emvideo_ted_version'] = EMVIDEO_TED_DATA_VERSION;
 
-  // Gather info about the item's raw flash video.
-  $url = EMVIDEO_TED_PLAYER_URL . EMVIDEO_TED_VIDEO_BASE . $item['value'];
-
-  // add the extra bits to get a proper response
-  global $_media_ted_extra;
-  if (!empty($_media_ted_extra)) {
-    $url .= "&$_media_ted_extra";
+  if (EMVIDEO_TED_DATA_VERSION > 3) {
+    $data += emvideo_ted_data_parse_iframe($item['value']);
+  }
+  else {
+    $data += emvideo_ted_data_parse_flash($item['value']);
   }
 
-  $response = emfield_request_header('ted', $url);
-
-  if ($response->code == 200) {
-    // Don't give the 303 path.
-    $data['flash']['url'] = $url;
-    $data['flash']['size'] = $response->headers['Content-Length'];
-    $data['flash']['mime'] = $response->headers['Content-Type'];
-  }
-
-  // Save the thumbnail URL, if set + the extra bits
-  if (!empty($_media_ted_extra) &&
-      preg_match('@su=(http[s]?://.*\.(gif|png|jpg))(.*)@i', $_media_ted_extra, $matches)) {
-    $data['thumbnail']['url'] = $matches[1];
-    $data['extra'] = $matches[3];
-  }
-
-  unset($_media_ted_extra);
   return $data;
 }
 
@@ -222,8 +215,12 @@ function emvideo_ted_thumbnail($field, $item, $formatter, $node, $width, $height
  *    The html of the embedded video.
  */
 function emvideo_ted_video($embed, $width, $height, $field, $item, $node, $autoplay) {
-  $output = theme('emvideo_ted_flash', $item, $width, $height, $autoplay);
-  return $output;
+
+  if (EMVIDEO_TED_DATA_VERSION < 4) {
+    return theme('emvideo_ted_flash', $item, $width, $height, $autoplay);
+  }
+
+  return theme('emvideo_ted_iframe', $item, $width, $height);
 }
 
 /**
@@ -245,8 +242,22 @@ function emvideo_ted_video($embed, $width, $height, $field, $item, $node, $autop
  *    The html of the embedded video.
  */
 function emvideo_ted_preview($embed, $width, $height, $field, $item, $node, $autoplay) {
-  $output = theme('emvideo_ted_flash', $item, $width, $height, $autoplay);
-  return $output;
+  if (EMVIDEO_TED_DATA_VERSION < 4) {
+    return theme('emvideo_ted_flash', $item, $width, $height, $autoplay);
+  }
+
+  return theme('emvideo_ted_iframe', $item, $width, $height);
+}
+
+/**
+ * Return the embed iframe
+ */
+function theme_emvideo_ted_iframe($item, $width, $height) {
+  $url = EMVIDEO_TED_EMBED_BASE . $item['value'];
+
+  return <<<EOD
+<iframe src="$url" width="$width" height="$height" frameborder="0" scrolling="no" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+EOD;
 }
 
 /**
@@ -305,13 +316,20 @@ EOD;
  * This returns any theme functions defined by this provider.
  */
 function emvideo_ted_emfield_subtheme() {
+  $path = drupal_get_path('module', 'media_ted');
+
   $themes = array(
+    'emvideo_ted_iframe' => array(
+      'arguments' => array('item' => NULL, 'width' => NULL, 'height' => NULL),
+      'file' => 'providers/ted.inc',
+      'path' => $path
+    ),
     'emvideo_ted_flash'  => array(
       'arguments' => array('item' => NULL, 'width' => NULL, 'height' => NULL,
         'autoplay' => NULL),
-        'file' => 'providers/ted.inc',
-        'path' => drupal_get_path('module', 'media_ted'),
-      )
+      'file' => 'providers/ted.inc',
+      'path' => $path,
+    )
   );
   return $themes;
 }
@@ -331,4 +349,63 @@ function emvideo_ted_content_generate() {
     '[ted id=1135]',
     '[ted id=1142]'
   );
+}
+
+/**
+ * Helpers
+ */
+
+
+/**
+ * Helper function to get thumbnail from the iframe contents
+ *
+ * @param $embed - TED emvideo ID
+ */
+function emvideo_ted_data_parse_iframe($embed) {
+  $data = array();
+  $response = drupal_http_request(EMVIDEO_TED_EMBED_BASE . $embed);
+  if ($response->code == 200) {
+    // try to get thumbnail from actual iframe contents
+    if (preg_match('@(http[s]?://images\.ted\.com/[^\'"]*\.(gif|png|jpe?g))@i', $response->data, $matches)) {
+      $data['thumbnail']['url'] = $matches[1];
+    }
+  }
+
+  return $data;
+}
+
+/**
+ * Helper function to get flash movie data
+ * For TED data version < 4
+ *
+ * @param $embed - TED emvideo ID
+ */
+function emvideo_ted_data_parse_flash($embed) {
+  // Gather info about the item's raw flash video.
+  $url = EMVIDEO_TED_PLAYER_URL . EMVIDEO_TED_VIDEO_BASE . $item['value'];
+
+  // add the extra bits to get a proper response
+  global $_media_ted_extra;
+  if (!empty($_media_ted_extra)) {
+    $url .= "&$_media_ted_extra";
+  }
+  $data = array();
+  $response = emfield_request_header('ted', $url);
+
+  if ($response->code == 200) {
+    // Don't give the 303 path.
+    $data['flash']['url'] = $url;
+    $data['flash']['size'] = $response->headers['Content-Length'];
+    $data['flash']['mime'] = $response->headers['Content-Type'];
+  }
+
+  // Save the thumbnail URL, if set + the extra bits
+  if (!empty($_media_ted_extra) &&
+      preg_match('@su=(http[s]?://.*\.(gif|png|jpg))(.*)@i', $_media_ted_extra, $matches)) {
+    $data['thumbnail']['url'] = $matches[1];
+    $data['extra'] = $matches[3];
+  }
+
+  unset($_media_ted_extra);
+  return $data;
 }
