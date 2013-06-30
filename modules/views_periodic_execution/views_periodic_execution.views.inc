@@ -1,6 +1,5 @@
 <?php
 
-// $Id: views_periodic_execution.views.inc,v 1.2 2010/06/10 20:43:44 darthsteven Exp $
 
 /**
  * Implementation of hook_views_plugins().

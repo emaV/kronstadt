@@ -1,6 +1,5 @@
 <?php
 
-// $Id: views_periodic_execution.report.inc,v 1.2.2.1 2010/11/12 16:59:55 darthsteven Exp $
 
 /**
  * Build and display a report of periodically executed views

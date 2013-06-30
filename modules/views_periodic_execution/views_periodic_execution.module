@@ -1,6 +1,5 @@
 <?php
 
-// $Id: views_periodic_execution.module,v 1.4.2.1 2010/11/12 16:59:55 darthsteven Exp $
 
 /**
  * Implementation of hook_views_menu().
@@ -147,7 +146,7 @@ function views_periodic_execution_cron() {
     // The first condition here allows us to have displays that are never automatically executed:
     if (($interval >= 0) && time() - $last_executed > $interval) {
       // Execute the view:
-      $view->execute_display();
+      $view->execute_display($view_data['display']);
     }
   }
 }

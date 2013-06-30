@@ -1,6 +1,5 @@
 <?php
 
-// $Id: views_periodic_execution_plugin_display.inc,v 1.6.2.1 2010/11/12 16:59:55 darthsteven Exp $
 
 /**
  * Provides a basic display plugin that executes periodically.
