@@ -1,5 +1,4 @@
 <?php
-// $Id: cufon.admin.inc,v 1.4 2009/08/26 21:33:54 eads Exp $
 /**
  * @file
  * Provides the administration page for Cufon.
@@ -15,19 +14,20 @@ function cufon_admin() {
   $selectors = variable_get('cufon_selectors', array());
 
   $fonts = array('------');
-  foreach (_cufon_discover_fonts() as $font) {
-    $fonts[$font] = $font;
+  foreach (_cufon_find_fonts() as $family => $file) {
+    $fonts[$family] = $family;
   }
 
   $form = array(
     'cufon_selectors' =>  array(
       '#type' => 'fieldset',
       '#tree' => TRUE,
+      '#title' => t('CSS selectors'),
       '#description' => t('You may add as many selector / font combinations as you would like.  To add additional input fields, save to add @count more.', array('@count' => CUFON_ADDITIONAL_FORM_ELEMENTS)),
     ),
   );
   $i = 0;
-  while ($i < (count($selectors) + CUFON_ADDITIONAL_FORM_ELEMENTS)) { 
+  while ($i < (count($selectors) + CUFON_ADDITIONAL_FORM_ELEMENTS)) {
     $form['cufon_selectors'][$i] = array(
       'selector' => array(
         '#type' => 'textarea',

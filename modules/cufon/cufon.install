@@ -4,7 +4,7 @@
  * Implementation of hook_install().
  */
 function cufon_install() {
-  // Increase module weight to ensure scripts are handled relatively late in 
+  // Increase module weight to ensure scripts are handled relatively late in
   // the page rendering process.
   $sql = "UPDATE {system}
           SET weight = 100
@@ -18,4 +18,30 @@ function cufon_update_6000() {
           SET weight = 100
           WHERE name = 'cufon'";
   db_query($sql);
+}
+
+/**
+ * Implementation of hook_requirements().
+ */
+function cufon_requirements($phase) {
+  $requirements = array();
+
+  // search in libraries folders for cufon-yui.js library.
+  $cufonLib = drupal_system_listing('cufon-yui.js', 'libraries');
+  $file_exists = isset($cufonLib['cufon-yui']);
+
+  // for backwards compatibility
+  if (!$file_exists) {
+    $js = dirname(__FILE__) . '/js';
+    $file_exists = file_exists($js . '/cufon-yui.js');
+  }
+
+  if ($phase == 'runtime' || !$file_exists) {
+    $requirements['cufon'] = array(
+      'title' => t('Cufon'),
+      'value' => $file_exists ? t('Cufon library installed') : t('<strong>Cufón:</strong> You must download <a href="http://cufon.shoqolate.com/js/cufon-yui.js">cufon-yui.js</a> and install it to <code>libraries/cufon</code>.'),
+      'severity' => $file_exists ? REQUIREMENT_INFO : REQUIREMENT_ERROR,
+    );
+  }
+  return $requirements;
 }

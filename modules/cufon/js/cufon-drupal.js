@@ -1,10 +1,13 @@
-// $Id: cufon-drupal.js,v 1.1 2009/07/13 21:41:46 eads Exp $
+(function ($) {
+  Drupal.behaviors.cufonReplace = function(context) {
+    for (o in Drupal.settings.cufonSelectors) {
+      var s = Drupal.settings.cufonSelectors[o];
+      $(s.selector + ':not(.cufon-replace-processed)', context).addClass('cufon-replace-processed').each(function() {
+        Cufon.replace($(this), s.options);
+      });
+    }
 
-// Initialize Cufon based on Drupal settings
-for (o in Drupal.settings.cufonSelectors) { 
-  s = Drupal.settings.cufonSelectors[o];
-  Cufon.replace(s.selector, s.options)
-}
-
-// Work around Internet Explorer rendering delay
-Cufon.now();
+    // Work around Internet Explorer rendering delay
+    Cufon.now();
+  };
+})(jQuery);
