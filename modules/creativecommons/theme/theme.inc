@@ -1,5 +1,4 @@
 <?php
-// $Id: theme.inc,v 1.1.2.3 2010/08/28 23:33:36 kreynen Exp $
 
 /**
  * @file
@@ -19,7 +18,7 @@ function theme_creativecommons_site_license($cc) {
 
   // Additional text
   if ($additional_text = variable_get('creativecommons_site_license_additional_text', '')) {
-    $output .= '<br/>'. $additional_text;
+    $output .= '<br/>'. filter_xss($additional_text);
   }
 
   // RDF output

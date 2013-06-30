@@ -1,5 +1,4 @@
 <?php
-// $Id: apachesolr_cc.module,v 1.1.2.1 2010/08/10 19:20:56 turadg Exp $
 
 /**
  * Implementation of hook_apachesolr_update_index().
