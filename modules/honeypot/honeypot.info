@@ -1,0 +1,10 @@
+name = Honeypot
+description = "Mitigates spam form submissions using the honeypot method."
+core = 6.x
+package = "Spam control"
+; Information added by drupal.org packaging script on 2013-02-06
+version = "6.x-1.14"
+core = "6.x"
+project = "honeypot"
+datestamp = "1360172449"
+
