@@ -3,17 +3,9 @@
 require_once('opengraph_meta.common.inc');
 
 
-define('OPENGRAPH_META_MENU_ADMIN','admin/content/opengraph_meta');
-define('OPENGRAPH_META_MENU_ADMIN_SETTINGS',OPENGRAPH_META_MENU_ADMIN.'/settings');
+define('OPENGRAPH_META_MENU_ADMIN_D7','admin/config/content/opengraph_meta');
+define('OPENGRAPH_META_MENU_ADMIN_D6','admin/settings/opengraph_meta');
 
-
-
-/**
- * Implements hook_perm().
- */
-function opengraph_meta_perm() {
-  return array(OPENGRAPH_META_PERM_ADMIN, OPENGRAPH_META_PERM_EDIT);
-}
 
 
 /**
@@ -22,22 +14,28 @@ function opengraph_meta_perm() {
 function opengraph_meta_menu() {
   $admin_access = array(OPENGRAPH_META_PERM_ADMIN);
 
-  $items[OPENGRAPH_META_MENU_ADMIN] = array(
+  $menupath = (OPENGRAPH_META_DRUPAL_VERSION == 6) ? OPENGRAPH_META_MENU_ADMIN_D6 : OPENGRAPH_META_MENU_ADMIN_D7;
+
+  $items[$menupath] = array(
     'title' => 'Open Graph meta tags',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('opengraph_meta_settings_form'),
     'description' => 'Configure meta tags for Facebook sharing.',
     'access arguments' => $admin_access,
-    'type' => MENU_NORMAL_ITEM,
     'file' => 'opengraph_meta.admin.inc',
+    'menu_name' => 'management',
   );
-  $items[OPENGRAPH_META_MENU_ADMIN_SETTINGS] = array(
-    'title' => 'Settings',
-    'access arguments' => $admin_access,
-    'type' => MENU_DEFAULT_LOCAL_TASK,
-    'weight' => -1,
-    'file' => 'opengraph_meta.admin.inc',
-  );
+
+  if (6 == OPENGRAPH_META_DRUPAL_VERSION) {
+    $items[$menupath]['type'] = MENU_NORMAL_ITEM;
+    $items[rtrim($menupath,'/').'/settings'] = array(
+      'title' => 'Settings',
+      'access arguments' => $admin_access,
+      'type' => MENU_DEFAULT_LOCAL_TASK,
+      'weight' => -1,
+      'file' => 'opengraph_meta.admin.inc',
+    );
+  }
 
   return $items;
 }
@@ -111,19 +109,19 @@ function opengraph_meta_form_alter(&$form, $form_state, $form_id) {
     $form['opengraph_meta']['contact'] = array_merge($form['opengraph_meta']['contact'], _opengraph_meta_contact_form_fields($node));
 
     // if we have images in this node then show thumbnail selector
-    $image_paths = OpenGraphMeta::instance()->harvest_images_from_node($node);
-    if (!empty($image_paths)) {
+    $images = OpenGraphMeta::instance()->harvest_images_from_node($node);
+    if (!empty($images)) {
       $image_selector_options = array();
-      foreach ($image_paths as $path) {
-        $abs_path = url($path);
-        $image_selector_options[$path] = "<img src=\"$abs_path\" alt=\"$path\" title=\"$path\" width=\"32px\" height=\"32px\" />";
+      foreach ($images as $image) {
+        $image_selector_options[$image['url']] = OpenGraphMetaDrupalLayer::theme_selector_image($image);
       }
       $form['opengraph_meta'][OpenGraphMeta::IMAGE] = array(
         '#title' => t('Thumbnail image'),
         '#type' => 'radios',
         '#default_value' => !empty($node->opengraph_meta) ? $node->opengraph_meta[OpenGraphMeta::IMAGE] : '',
-        '#description' => t('The thumbnail image that will get shown in e.g. a Facebook preview. If left unset then then the first available image will be used.'),
+        '#description' => t('The thumbnail image that will get shown in e.g. a Facebook preview. If left unset then then the first available image will be used. If none available then the global fallback image will be used.'),
         '#options' => $image_selector_options,
+        '#attributes' => array('class' => array('opengraph-thumbs-wrapper','clearfix')),
       );
     }
   }
@@ -141,14 +139,26 @@ function _opengraph_meta_location_form_fields($node = NULL) {
     OpenGraphMeta::POST_CODE => array('Post code', 'Postal code.'),
     OpenGraphMeta::COUNTRY_NAME => array('Country', 'Full country name.'),
   );
+
+  $defaults = OpenGraphMeta::instance()->get_og_optional_tag_defaults($node);
+
   foreach ($fields as $f => $i) {
+    $default_value = '';
+    if (!empty($node->opengraph_meta) && !empty($node->opengraph_meta[$f])) {
+      $default_value = $node->opengraph_meta[$f];
+    }
+
     $ret[$f] = array(
       '#title' => t($i[0]),
       '#type' => 'textfield',
       '#maxlength' => 255,
-      '#default_value' => !empty($node->opengraph_meta) ? $node->opengraph_meta[$f] : '',
+      '#default_value' =>  $default_value,
       '#description' => t($i[1]),
     );
+    // global fallback value?
+    if (!empty($node) && isset($node->nid) && !empty($defaults[$f])) {
+      $ret[$f]['#description'] .= t(' If left unset then the global fallback value will be used: "@s"',array('@s' => $defaults[$f]));
+    }
   }
   return $ret;
 }
@@ -157,51 +167,38 @@ function _opengraph_meta_location_form_fields($node = NULL) {
 function _opengraph_meta_contact_form_fields($node = NULL) {
   $ret = array();
   $fields = array(
-    OpenGraphMeta::EMAIL => array('Email', ''),
-    OpenGraphMeta::PHONE_NUMBER => array('Phone number', ''),
-    OpenGraphMeta::FAX_NUMBER => array('Fax number', ''),
+    OpenGraphMeta::EMAIL => array('Email', 'Email address.'),
+    OpenGraphMeta::PHONE_NUMBER => array('Phone number', 'Phone number.'),
+    OpenGraphMeta::FAX_NUMBER => array('Fax number', 'Fax number.'),
   );
+
+  $defaults = OpenGraphMeta::instance()->get_og_optional_tag_defaults($node);
+
   foreach ($fields as $f => $i) {
+    $default_value = '';
+    if (!empty($node->opengraph_meta) && !empty($node->opengraph_meta[$f])) {
+      $default_value = $node->opengraph_meta[$f];
+    }
+
     $ret[$f] = array(
       '#title' => t($i[0]),
       '#type' => 'textfield',
       '#maxlength' => 255,
-      '#default_value' => !empty($node->opengraph_meta) ? $node->opengraph_meta[$f] : '',
+      '#default_value' => $default_value,
       '#description' => t($i[1]),
     );
+    // global fallback value?
+    if (!empty($node) && isset($node->nid) && !empty($defaults[$f])) {
+      $ret[$f]['#description'] .= t(' If left unset then the global fallback value will be used: "@s"',array('@s' => $defaults[$f]));
+    }
   }
   return $ret;
 }
 
 
 
-
-/**
- * Implements hook_nodeapi().
- */
-function opengraph_meta_nodeapi(&$node, $op, $teaser = NULL, $page = NULL) {
-  switch ($op) {
-    case 'delete':
-      OpenGraphMeta::instance()->delete_node_data($node->nid);
-      break;
-    case 'insert':
-    case 'update':
-      if (!empty($node->opengraph_meta)) {
-        OpenGraphMeta::instance()->save_node_data($node->nid, $node->opengraph_meta);
-      }
-      break;
-    case 'load':
-      if (OpenGraphMeta::instance()->tags_are_enabled_for_content_type($node->type)) {
-        return array('opengraph_meta' => OpenGraphMeta::instance()->load_node_data($node));
-      }
-      break;
-    case 'view':
-      // only show meta tags if viewing full node as a page
-      if (NODE_BUILD_NORMAL == $node->build_mode && !$teaser && $page && !empty($node->opengraph_meta))
-        OpenGraphMeta::instance()->render_data($node, $node->opengraph_meta);
-  }
+if (6 == OPENGRAPH_META_DRUPAL_VERSION) {
+  require_once 'opengraph_meta.drupal6-hooks.inc';
+} else {
+  require_once 'opengraph_meta.drupal7-hooks.inc';
 }
-
-
-
-

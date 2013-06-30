@@ -27,7 +27,6 @@ function opengraph_meta_update_6002(){
   db_add_field($result, OPENGRAPH_META_TABLE, OpenGraphMeta::__OPTIONAL_DB_FIELD, array(
     'type' => 'text',
     'not null' => FALSE,
-    'default' => '',
     'serialize' => TRUE,
   ));
   return $result;
@@ -54,7 +53,6 @@ function opengraph_meta_schema(){
           'type' => 'text',
           'not null' => TRUE,
           'size' => 'big',
-          'default' => '',
         ),
         OpenGraphMeta::IMAGE => array(
           'type' => 'varchar',
@@ -71,7 +69,6 @@ function opengraph_meta_schema(){
         OpenGraphMeta::__OPTIONAL_DB_FIELD => array(
           'type' => 'text',
           'not null' => FALSE,
-          'default' => '',
           'serialize' => TRUE,
         ),
       ),
@@ -94,6 +91,7 @@ function opengraph_meta_uninstall() {
     $types = node_get_types();
     foreach ($types as $id => $d) {
       variable_del(OPENGRAPH_META_VAR_CONTENT_TYPE_.$id);
+      variable_del(OPENGRAPH_META_VAR_CONTENT_TYPE_CCK_.$id);
     }
 }
 
