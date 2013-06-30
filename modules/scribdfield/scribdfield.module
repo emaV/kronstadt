@@ -333,11 +333,11 @@ function theme_scribdfield_formatter_ipaper($element) {
     $data = $element['#item']['data'];
 
     $output = array(
-      '<script type="text/javascript" src="http://www.scribd.com/javascripts/view.js"></script>',
-      '<div id="embedded_flash" class="collapsible collapsed"></div>',
+      '<script type="text/javascript" src="http://www.scribd.com/javascripts/scribd_api.js"></script>',
+      '<div id="scribdfield_embed_' . $data['scribd_doc_id'] . '" class="collapsible collapsed"></div>',
       '<script type="text/javascript">',
       'var scribd_doc = scribd.Document.getDoc("' . $data['scribd_doc_id'] . '", "' . $data['scribd_access_key'] . '");',
-      'scribd_doc.addParam("jsapi_version", 1);',
+      'scribd_doc.addParam("jsapi_version", 2);',
     );
 
     // For secure files, we need to sign the request with a MD5 hash.
@@ -361,7 +361,7 @@ function theme_scribdfield_formatter_ipaper($element) {
       $output[] = 'scribd_doc.grantAccess("' . $user_id . '", "' . $session_id . '", "' . $hash . '");';
     }
 
-    $output[] = 'scribd_doc.write("embedded_flash");';
+    $output[] = 'scribd_doc.write("scribdfield_embed_' . $data['scribd_doc_id'] . '");';
     $output[] = '</script>';
 
     return implode("\n", $output);
