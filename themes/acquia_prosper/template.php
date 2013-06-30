@@ -33,11 +33,11 @@ function acquia_prosper_preprocess_user_picture(&$variables) {
 //dpm($variables);
   $account = $variables['account'];
   $link = url("user/" . $account->uid);
-  $file =  mobile_codes_generate($link);
+//  $file =  mobile_codes_generate($link);
   $picture = $account->picture ? $account->picture : file_create_url($file);
  
   $alt = t("@user's picture", array('@user' => $account->name ? $account->name : variable_get('anonymous', t('Anonymous'))));
-  $variables['picture'] = theme('image', $picture, $alt, $alt, '', FALSE);
+  $variables['picture'] = theme('image', $account->picture, $alt, $alt, '', FALSE);
   if (!empty($account->uid) && user_access('access user profiles')) {
     $attributes = array('attributes' => array('title' => t('View user profile.')), 'html' => TRUE);
     $variables['picture'] = l($variables['picture'], "user/$account->uid", $attributes);
